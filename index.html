@@ -133,32 +133,54 @@
   .collapsible-header {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 14px;
     cursor: pointer;
     margin: 24px 0 12px;
     user-select: none;
+    background: var(--bg-panel);
+    border: 1px solid var(--utility-color);
+    border-radius: 8px;
+    padding: 14px 18px;
+    transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
   }
-  .collapsible-header::before, .collapsible-header::after { content: ''; flex: 1; height: 1px; background: var(--border); }
-
-  .collapsible-label {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--utility-color);
-    white-space: nowrap;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+  .collapsible-header:hover {
+    background: rgba(160,184,208,0.07);
+    border-color: rgba(160,184,208,0.7);
+    box-shadow: 0 0 16px rgba(160,184,208,0.1);
   }
 
   .collapsible-arrow {
-    display: inline-block;
-    font-size: 10px;
-    transition: transform 0.25s;
-    color: var(--text-dim);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    font-size: 16px;
+    background: rgba(160,184,208,0.1);
+    border: 1px solid rgba(160,184,208,0.3);
+    border-radius: 5px;
+    color: var(--utility-color);
+    transition: transform 0.25s, background 0.2s;
+    flex-shrink: 0;
   }
   .collapsible-arrow.open { transform: rotate(90deg); }
+
+  .collapsible-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--utility-color);
+    flex: 1;
+  }
+
+  .collapsible-hint {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+  }
 
   .collapsible-body {
     display: none;
@@ -528,10 +550,9 @@
   <div class="buildings-grid" id="buildingsGrid"></div>
 
   <div class="collapsible-header" id="utilityToggle">
-    <span class="collapsible-label">
-      <span class="collapsible-arrow" id="utilityArrow">▶</span>
-      Utility Buildings — Industry Levels (0 – 10)
-    </span>
+    <span class="collapsible-arrow" id="utilityArrow">▶</span>
+    <span class="collapsible-label">Utility Buildings — Industry Levels (0 – 10)</span>
+    <span class="collapsible-hint">Click to expand</span>
   </div>
   <div class="collapsible-body" id="utilityBody">
     <div class="buildings-grid" id="utilityGrid"></div>
