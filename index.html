@@ -825,7 +825,24 @@ function recalculate() {
     state[b.id].target = f(Math.max(state[b.id].userTarget, state[b.id].current));
   });
 
-  // Step 2: WT cap — clamp all CORE building targets to WT's whole level
+  // Step 2a: WT floor — if any building target exceeds WT, raise WT to match
+  // This makes WT a follower when the user sets a non-WT building higher than it
+  const highestNonWT = Math.max(
+    ...ALL_BUILDINGS
+      .filter(b => b.id !== 'watchTower')
+      .map(b => Math.floor(f(state[b.id].target) + 0.001))
+  );
+  if (highestNonWT > Math.floor(f(state.watchTower.target) + 0.001)) {
+    state.watchTower.target = highestNonWT;
+    // Also lift userTarget so the WT dropdown reflects the change
+    if (highestNonWT > Math.floor(f(state.watchTower.userTarget) + 0.001)) {
+      state.watchTower.userTarget = highestNonWT;
+      const wtSel = document.getElementById('target-watchTower');
+      if (wtSel) wtSel.value = highestNonWT;
+    }
+  }
+
+  // Step 2b: WT cap — clamp all CORE building targets to WT's whole level
   // Utility buildings are independent and not capped
   const wtEffTarget   = f(state.watchTower.target);
   const wtTargetWhole = Math.floor(wtEffTarget + 0.001);
