@@ -403,7 +403,7 @@
       <div class="grand-total-unit">PRECISION PARTS</div>
     </div>
     <div id="overridesBlock"></div>
-    <div class="cap-note">⚠ Level 8→9 and beyond not yet available — capped at level 8. Higher levels coming soon.</div>
+    <div class="cap-note">⚠ ⚠ Level 10 is the current maximum.</div>
   </div>
 
 </div>
@@ -423,23 +423,23 @@ const BUILDINGS = [
 
 // COSTS[id][i] = full cost for level i → i+1  (index 0 = 0→1, index 7 = 7→8)
 const COSTS = {
-  watchTower: [ 900, 1100, 1300, 1550, 1850, 1500, 1600, 1750],
-  shooter:    [ 400,  450,  550,  650,  800,  600,  700,  800],
-  fighter:    [ 400,  450,  550,  650,  800,  600,  700,  800],
-  rider:      [ 400,  450,  550,  650,  800,  600,  700,  800],
-  guild:      [ 250,  250,  250,  350,  450,  350,  400,  500],
-  military:   [1250, 1500, 1800, 2200, 2600, 2000, 2200, 2400],
-  research:   [ 900, 1100, 1300, 1550, 1850, 2150, 2300, 2450],
-  plaza:      [ 150,  200,  200,  250,  300,  250,  300,  350],
+  watchTower: [ 900, 1100, 1300, 1550, 1850, 1500, 1600, 1750, 2000, 2250],
+  shooter:    [ 400,  450,  550,  650,  800,  600,  700,  800, 1110, 1500],
+  fighter:    [ 400,  450,  550,  650,  800,  600,  700,  800, 1110, 1500],
+  rider:      [ 400,  450,  550,  650,  800,  600,  700,  800, 1110, 1500],
+  guild:      [ 250,  250,  250,  350,  450,  350,  400,  500,  600,  750],
+  military:   [1250, 1500, 1800, 2200, 2600, 2000, 2200, 2400, 2900, 3500],
+  research:   [ 900, 1100, 1300, 1550, 1850, 2150, 2300, 2450, 2100, 2500],
+  plaza:      [ 150,  200,  200,  250,  300,  250,  300,  350,  500,  650],
 };
 
-const MAX_LEVEL = 8;
+const MAX_LEVEL = 10;
 
 // To upgrade WT from level N → N+1, guild AND this troop must already be at level N
 const WT_PREREQ_TROOP = {
   1: 'shooter', 2: 'shooter', 3: 'rider',
   4: 'fighter', 5: 'shooter', 6: 'rider',
-  7: 'fighter', 8: 'shooter',
+  7: 'fighter', 8: 'shooter', 9: 'rider', 10: 'fighter',
 };
 
 const COLOR_MAP = {
