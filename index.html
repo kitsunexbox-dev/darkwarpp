@@ -27,6 +27,7 @@
     --military-color: #ff9060;
     --research-color: #60e0ff;
     --plaza-color: #ffa0c0;
+    --utility-color: #a0b8d0;
     --shadow-card: 0 4px 24px rgba(0,0,0,0.5);
   }
 
@@ -93,7 +94,6 @@
     text-transform: uppercase;
   }
 
-  /* Reset button */
   .toolbar {
     display: flex;
     justify-content: flex-end;
@@ -113,11 +113,7 @@
     cursor: pointer;
     transition: background 0.2s, border-color 0.2s, color 0.2s;
   }
-  .reset-btn:hover {
-    background: rgba(255,96,48,0.2);
-    border-color: rgba(255,96,48,0.6);
-    color: #ff9070;
-  }
+  .reset-btn:hover { background: rgba(255,96,48,0.2); border-color: rgba(255,96,48,0.6); color: #ff9070; }
   .reset-btn:active { transform: scale(0.97); }
 
   .section-label {
@@ -132,6 +128,44 @@
     gap: 12px;
   }
   .section-label::before, .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  /* Collapsible utility section */
+  .collapsible-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    margin: 24px 0 12px;
+    user-select: none;
+  }
+  .collapsible-header::before, .collapsible-header::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  .collapsible-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--utility-color);
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .collapsible-arrow {
+    display: inline-block;
+    font-size: 10px;
+    transition: transform 0.25s;
+    color: var(--text-dim);
+  }
+  .collapsible-arrow.open { transform: rotate(90deg); }
+
+  .collapsible-body {
+    display: none;
+  }
+  .collapsible-body.open {
+    display: block;
+  }
 
   /* Cards */
   .buildings-grid {
@@ -162,14 +196,15 @@
     box-shadow: 0 0 18px rgba(255,140,20,0.13);
   }
 
-  .building-card.watch-tower { --bcolor: var(--wt-color); }
-  .building-card.shooter     { --bcolor: var(--shooter-color); }
-  .building-card.fighter     { --bcolor: var(--fighter-color); }
-  .building-card.rider       { --bcolor: var(--rider-color); }
-  .building-card.guild       { --bcolor: var(--guild-color); }
-  .building-card.military    { --bcolor: var(--military-color); }
-  .building-card.research    { --bcolor: var(--research-color); }
-  .building-card.plaza       { --bcolor: var(--plaza-color); }
+  .building-card.watch-tower    { --bcolor: var(--wt-color); }
+  .building-card.shooter        { --bcolor: var(--shooter-color); }
+  .building-card.fighter        { --bcolor: var(--fighter-color); }
+  .building-card.rider          { --bcolor: var(--rider-color); }
+  .building-card.guild          { --bcolor: var(--guild-color); }
+  .building-card.military       { --bcolor: var(--military-color); }
+  .building-card.research       { --bcolor: var(--research-color); }
+  .building-card.plaza          { --bcolor: var(--plaza-color); }
+  .building-card.utility-card   { --bcolor: var(--utility-color); }
 
   .building-header {
     display: flex;
@@ -183,6 +218,12 @@
     letter-spacing: 1px;
     text-transform: uppercase;
     color: var(--bcolor, var(--text-bright));
+  }
+  .estimate-marker {
+    color: var(--accent);
+    font-size: 13px;
+    margin-left: 2px;
+    vertical-align: super;
   }
   .badge-row { display: flex; align-items: center; gap: 6px; }
   .building-icon { font-size: 18px; }
@@ -246,7 +287,6 @@
   .card-parts-value.zero { color: var(--text-dim); text-shadow: none; font-size: 14px; }
   .card-parts-value.auto { color: var(--accent); text-shadow: 0 0 10px rgba(232,160,32,0.4); }
 
-  /* Small amber pill shown on card when auto-set, replacing the big notice */
   .auto-pill {
     display: inline-flex;
     align-items: center;
@@ -315,6 +355,18 @@
   .breakdown-row.zero .breakdown-val { color: var(--text-dim); }
   .breakdown-row.is-auto .breakdown-val { color: var(--accent); }
 
+  /* Summary divider between core and utility */
+  .breakdown-divider {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    padding: 6px 0 4px;
+    border-top: 1px solid var(--border);
+    margin-top: 4px;
+  }
+
   .grand-total-box {
     background: linear-gradient(135deg, rgba(232,160,32,0.12), rgba(255,96,48,0.07));
     border: 1px solid rgba(232,160,32,0.4);
@@ -362,15 +414,96 @@
   .ov-item .ov-reason { color: #cc9050; display: block; }
   .ov-item .ov-reason::before { content: '▸ '; color: var(--accent2); }
 
-  .cap-note {
-    text-align: center;
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 2px;
-    color: var(--text-dim);
+  /* Notes at bottom of summary */
+  .summary-notes {
     margin-top: 18px;
     padding-top: 14px;
     border-top: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .summary-note {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    color: var(--text-dim);
+    line-height: 1.6;
+  }
+  .summary-note .note-marker {
+    color: var(--accent);
+    margin-right: 4px;
+  }
+  .summary-note a {
+    color: var(--accent3);
+    text-decoration: none;
+  }
+  .summary-note a:hover { text-decoration: underline; }
+
+  /* Mr Fox Signature */
+  .mrfox-sig {
+    text-align: center;
+    padding: 40px 0 10px;
+    position: relative;
+  }
+  .mrfox-sig::before {
+    content: '';
+    display: block;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(74,106,255,0.3), rgba(232,160,32,0.3), rgba(74,106,255,0.3), transparent);
+    margin-bottom: 28px;
+  }
+  .mrfox-crafted {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+  }
+  .mrfox-name {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: clamp(26px, 6vw, 42px);
+    background: linear-gradient(135deg, #c0a060 0%, #ffd080 40%, #e8a020 60%, #ff8040 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 0 18px rgba(232,160,32,0.45));
+    letter-spacing: 4px;
+    position: relative;
+    display: inline-block;
+  }
+  .mrfox-name::before {
+    content: '🦊';
+    font-size: 0.6em;
+    -webkit-text-fill-color: initial;
+    filter: none;
+    margin-right: 10px;
+    vertical-align: middle;
+    display: inline-block;
+    animation: fox-idle 4s ease-in-out infinite;
+  }
+  .mrfox-name::after {
+    content: '🦊';
+    font-size: 0.6em;
+    -webkit-text-fill-color: initial;
+    filter: none;
+    margin-left: 10px;
+    vertical-align: middle;
+    display: inline-block;
+    animation: fox-idle 4s ease-in-out infinite reverse;
+  }
+  @keyframes fox-idle {
+    0%, 100% { transform: translateY(0) rotate(-5deg); }
+    50%       { transform: translateY(-4px) rotate(5deg); }
+  }
+  .mrfox-title {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--text-dim);
+    margin-top: 6px;
+    opacity: 0.6;
   }
 
   @media (max-width: 480px) {
@@ -391,8 +524,18 @@
     <button class="reset-btn" id="resetBtn">↺ Reset All</button>
   </div>
 
-  <div class="section-label">Buildings — Industry Levels (0 – 8)</div>
+  <div class="section-label">Core Buildings — Industry Levels (0 – 10)</div>
   <div class="buildings-grid" id="buildingsGrid"></div>
+
+  <div class="collapsible-header" id="utilityToggle">
+    <span class="collapsible-label">
+      <span class="collapsible-arrow" id="utilityArrow">▶</span>
+      Utility Buildings — Industry Levels (0 – 10)
+    </span>
+  </div>
+  <div class="collapsible-body" id="utilityBody">
+    <div class="buildings-grid" id="utilityGrid"></div>
+  </div>
 
   <div class="summary-panel">
     <div class="summary-title">⚙ Parts Summary</div>
@@ -403,34 +546,73 @@
       <div class="grand-total-unit">PRECISION PARTS</div>
     </div>
     <div id="overridesBlock"></div>
-    <div class="cap-note">⚠ ⚠ Level 10 is the current maximum.</div>
+    <div class="summary-notes">
+      <div class="summary-note">
+        <span class="note-marker">★</span> Level 10 is the current maximum.
+      </div>
+      <div class="summary-note">
+        <span class="note-marker">*</span> Costs for levels 6→7 and 7→8 on marked buildings are estimated based on observed progression patterns and may not be exact. If you have the correct values, please contact <strong>MrFox</strong> on Discord.
+      </div>
+    </div>
+  </div>
+
+  <div class="mrfox-sig">
+    <div class="mrfox-crafted">Crafted by</div>
+    <div class="mrfox-name">Mr Fox</div>
+    <div class="mrfox-title">Dark War · Community Tools</div>
   </div>
 
 </div>
 <script>
 // ─── DATA ─────────────────────────────────────────────────────────────────────
 
-const BUILDINGS = [
-  { id: 'watchTower', name: 'Watch Tower', cls: 'watch-tower', icon: '🗼', badge: 'master' },
-  { id: 'shooter',   name: 'Shooter',     cls: 'shooter',    icon: '🏹', badge: 'troop'  },
-  { id: 'fighter',   name: 'Fighter',     cls: 'fighter',    icon: '⚔️', badge: 'troop'  },
-  { id: 'rider',     name: 'Rider',       cls: 'rider',      icon: '🐎', badge: 'troop'  },
-  { id: 'guild',     name: 'Guild',       cls: 'guild',      icon: '🏛️', badge: 'prereq' },
-  { id: 'military',  name: 'Military',    cls: 'military',   icon: '🎖️', badge: null     },
-  { id: 'research',  name: 'Research',    cls: 'research',   icon: '🔬', badge: null     },
-  { id: 'plaza',     name: 'Plaza',       cls: 'plaza',      icon: '🏙️', badge: null     },
+// Core buildings — have prerequisite logic
+const CORE_BUILDINGS = [
+  { id: 'watchTower', name: 'Watch Tower', cls: 'watch-tower', icon: '🗼', badge: 'master',  estimated: false },
+  { id: 'shooter',   name: 'Shooter',     cls: 'shooter',    icon: '🏹', badge: 'troop',   estimated: false },
+  { id: 'fighter',   name: 'Fighter',     cls: 'fighter',    icon: '⚔️', badge: 'troop',   estimated: false },
+  { id: 'rider',     name: 'Rider',       cls: 'rider',      icon: '🐎', badge: 'troop',   estimated: false },
+  { id: 'guild',     name: 'Guild',       cls: 'guild',      icon: '🏛️', badge: 'prereq',  estimated: false },
+  { id: 'military',  name: 'Military',    cls: 'military',   icon: '🎖️', badge: null,       estimated: false },
+  { id: 'research',  name: 'Research',    cls: 'research',   icon: '🔬', badge: null,       estimated: true  },
+  { id: 'plaza',     name: 'Plaza',       cls: 'plaza',      icon: '🏙️', badge: null,       estimated: false },
 ];
 
-// COSTS[id][i] = full cost for level i → i+1  (index 0 = 0→1, index 7 = 7→8)
+// Utility buildings — no prerequisite logic, independent
+const UTILITY_BUILDINGS = [
+  { id: 'reservistCamp',    name: 'Reservist Camp',    cls: 'utility-card', icon: '⛺', badge: null, estimated: true  },
+  { id: 'radar',            name: 'Radar',             cls: 'utility-card', icon: '📡', badge: null, estimated: false },
+  { id: 'library',          name: 'Library',           cls: 'utility-card', icon: '📚', badge: null, estimated: false },
+  { id: 'constructionHall', name: 'Construction Hall', cls: 'utility-card', icon: '🏗️', badge: null, estimated: false },
+  { id: 'trainingGround',   name: 'Training Ground',   cls: 'utility-card', icon: '🏋️', badge: null, estimated: false },
+  { id: 'mart',             name: 'Mart',              cls: 'utility-card', icon: '🏪', badge: null, estimated: false },
+  { id: 'medicalWorkshop',  name: 'Medical Workshop',  cls: 'utility-card', icon: '🏥', badge: null, estimated: false },
+];
+
+const ALL_BUILDINGS = [...CORE_BUILDINGS, ...UTILITY_BUILDINGS];
+
+// COSTS[id][i] = full cost for level i → i+1
+// Index 0 = 0→1 ... Index 9 = 9→10
+// * = estimated value (levels 6→7 and 7→8)
 const COSTS = {
-  watchTower: [ 900, 1100, 1300, 1550, 1850, 1500, 1600, 1750, 2000, 2250],
-  shooter:    [ 400,  450,  550,  650,  800,  600,  700,  800, 1110, 1500],
-  fighter:    [ 400,  450,  550,  650,  800,  600,  700,  800, 1110, 1500],
-  rider:      [ 400,  450,  550,  650,  800,  600,  700,  800, 1110, 1500],
-  guild:      [ 250,  250,  250,  350,  450,  350,  400,  500,  600,  750],
-  military:   [1250, 1500, 1800, 2200, 2600, 2000, 2200, 2400, 2900, 3500],
-  research:   [ 900, 1100, 1300, 1550, 1850, 2150, 2300, 2450, 2100, 2500],
-  plaza:      [ 150,  200,  200,  250,  300,  250,  300,  350,  500,  650],
+  // Core buildings
+  watchTower:      [  900, 1100, 1300, 1550, 1850, 1500, 1600, 1750, 2000, 2250],
+  shooter:         [  400,  450,  550,  650,  800,  600,  700,  800, 1110, 1500],
+  fighter:         [  400,  450,  550,  650,  800,  600,  700,  800, 1110, 1500],
+  rider:           [  400,  450,  550,  650,  800,  600,  700,  800, 1110, 1500],
+  guild:           [  250,  250,  250,  350,  450,  350,  400,  500,  600,  750],
+  military:        [ 1250, 1500, 1800, 2200, 2600, 2000, 2200, 2400, 2900, 3500],
+  research:        [  900, 1100, 1300, 1550, 1850, 1500, 1600, 1750, 2100, 2500], // 5→6 corrected; 6→7, 7→8 estimated*
+  plaza:           [  150,  200,  200,  250,  300,  250,  300,  350,  500,  650],
+
+  // Utility buildings
+  reservistCamp:   [  750,  900, 1100, 1300, 1550, 1250, 1350, 1500, 1750, 2000], // 6→7, 7→8 estimated*
+  radar:           [  500,  600,  700,  700, 1050,  750,  900, 1000, 1250, 1500],
+  library:         [  250,  300,  400,  450,  550,  450,  500,  600,  650,  750],
+  constructionHall:[  250,  300,  400,  450,  550,  450,  500,  600,  650,  750],
+  trainingGround:  [  250,  300,  400,  450,  550,  450,  500,  600,  650,  750],
+  mart:            [  250,  300,  400,  450,  550,  450,  500,  600,  650,  750],
+  medicalWorkshop: [  150,  200,  250,  300,  350,  300,  350,  400,  500,  750],
 };
 
 const MAX_LEVEL = 10;
@@ -443,14 +625,15 @@ const WT_PREREQ_TROOP = {
 };
 
 const COLOR_MAP = {
-  'watch-tower': 'var(--wt-color)',
-  'shooter':     'var(--shooter-color)',
-  'fighter':     'var(--fighter-color)',
-  'rider':       'var(--rider-color)',
-  'guild':       'var(--guild-color)',
-  'military':    'var(--military-color)',
-  'research':    'var(--research-color)',
-  'plaza':       'var(--plaza-color)',
+  'watch-tower':  'var(--wt-color)',
+  'shooter':      'var(--shooter-color)',
+  'fighter':      'var(--fighter-color)',
+  'rider':        'var(--rider-color)',
+  'guild':        'var(--guild-color)',
+  'military':     'var(--military-color)',
+  'research':     'var(--research-color)',
+  'plaza':        'var(--plaza-color)',
+  'utility-card': 'var(--utility-color)',
 };
 
 // ─── LEVEL OPTIONS ────────────────────────────────────────────────────────────
@@ -468,11 +651,9 @@ function buildLevelOptions() {
 const ALL_OPTS = buildLevelOptions();
 
 // ─── STATE ────────────────────────────────────────────────────────────────────
-// userTarget = what the user actually chose (before prereq overrides)
-// target     = effective target after prereq enforcement (may be higher than userTarget)
 const state = {};
 function initState() {
-  BUILDINGS.forEach(b => {
+  ALL_BUILDINGS.forEach(b => {
     state[b.id] = { current: 0, userTarget: 0, target: 0 };
   });
 }
@@ -482,19 +663,26 @@ initState();
 
 const f = v => +parseFloat(v).toFixed(1);
 
+// Convert display level (e.g. 4.3) to absolute segment index.
+// Each whole level has exactly 5 segments: N.0, N.1, N.2, N.3, N.4
+// Level 0.0 = seg 0, level 1.0 = seg 5, level 4.0 = seg 20, level 4.3 = seg 23
+function lvToSeg(lv) {
+  const whole = Math.floor(parseFloat(lv) + 0.0001);
+  const part  = Math.round((parseFloat(lv) - whole) * 10); // 0-4
+  return whole * 5 + part;
+}
+
 function calcCost(id, fromLv, toLv) {
-  let cur = f(fromLv), to = f(toLv);
-  if (to <= cur) return 0;
+  const fromSeg = lvToSeg(fromLv);
+  const toSeg   = lvToSeg(toLv);
+  if (toSeg <= fromSeg) return 0;
   const costs = COSTS[id];
+  if (!costs) return 0;
   let total = 0;
-  while (f(cur) < f(to)) {
-    const whole = Math.floor(f(cur) + 0.001);
+  for (let s = fromSeg; s < toSeg; s++) {
+    const whole = Math.floor(s / 5); // which whole-level this segment belongs to
     if (whole >= MAX_LEVEL) break;
-    const endOfLevel = whole + 1;
-    const stepTo = f(Math.min(to, endOfLevel));
-    const segs = Math.round((stepTo - cur) * 10);
-    total += segs * (costs[whole] / 5);
-    cur = stepTo;
+    total += costs[whole] / 5;
   }
   return Math.round(total);
 }
@@ -515,7 +703,6 @@ function makeSelect(buildingId, type) {
     const v = f(sel.value);
     if (type === 'current') {
       state[buildingId].current = v;
-      // If current pushed past userTarget, lift userTarget too
       if (f(state[buildingId].userTarget) < v) {
         state[buildingId].userTarget = v;
         const tgtSel = document.getElementById(`target-${buildingId}`);
@@ -529,136 +716,158 @@ function makeSelect(buildingId, type) {
   return sel;
 }
 
-function renderBuildings() {
-  const grid = document.getElementById('buildingsGrid');
-  BUILDINGS.forEach(b => {
-    const card = document.createElement('div');
-    card.className = `building-card ${b.cls}`;
-    card.id = `card-${b.id}`;
+function buildCard(b) {
+  const card = document.createElement('div');
+  card.className = `building-card ${b.cls}`;
+  card.id = `card-${b.id}`;
 
-    // Header
-    const hdr = document.createElement('div');
-    hdr.className = 'building-header';
-    const nameEl = document.createElement('div');
-    nameEl.className = 'building-name';
-    nameEl.textContent = b.name;
-    hdr.appendChild(nameEl);
+  // Header
+  const hdr = document.createElement('div');
+  hdr.className = 'building-header';
 
-    const badgeRow = document.createElement('div');
-    badgeRow.className = 'badge-row';
-    if (b.badge) {
-      const badge = document.createElement('span');
-      badge.className = `building-badge ${b.badge}`;
-      badge.textContent = b.badge === 'master' ? 'Master' : b.badge === 'prereq' ? 'Always Req.' : 'Troop';
-      badgeRow.appendChild(badge);
-    }
-    const icon = document.createElement('span');
-    icon.className = 'building-icon';
-    icon.textContent = b.icon;
-    badgeRow.appendChild(icon);
-    hdr.appendChild(badgeRow);
-    card.appendChild(hdr);
+  const nameEl = document.createElement('div');
+  nameEl.className = 'building-name';
+  nameEl.textContent = b.name;
+  if (b.estimated) {
+    const marker = document.createElement('span');
+    marker.className = 'estimate-marker';
+    marker.textContent = '*';
+    nameEl.appendChild(marker);
+  }
+  hdr.appendChild(nameEl);
 
-    // Level selects
-    const row = document.createElement('div');
-    row.className = 'level-row';
-    ['current', 'target'].forEach(type => {
-      const grp = document.createElement('div');
-      grp.className = 'level-group';
-      const lbl = document.createElement('label');
-      lbl.textContent = type === 'current' ? 'Current' : 'Target';
-      grp.appendChild(lbl);
-      grp.appendChild(makeSelect(b.id, type));
-      row.appendChild(grp);
-    });
-    card.appendChild(row);
+  const badgeRow = document.createElement('div');
+  badgeRow.className = 'badge-row';
+  if (b.badge) {
+    const badge = document.createElement('span');
+    badge.className = `building-badge ${b.badge}`;
+    badge.textContent = b.badge === 'master' ? 'Master' : b.badge === 'prereq' ? 'Always Req.' : 'Troop';
+    badgeRow.appendChild(badge);
+  }
+  const icon = document.createElement('span');
+  icon.className = 'building-icon';
+  icon.textContent = b.icon;
+  badgeRow.appendChild(icon);
+  hdr.appendChild(badgeRow);
+  card.appendChild(hdr);
 
-    // Parts display
-    const partsDiv = document.createElement('div');
-    partsDiv.className = 'card-parts';
-    partsDiv.innerHTML = `<span class="card-parts-label">Parts needed</span><span class="card-parts-value zero" id="parts-${b.id}">—</span>`;
-    card.appendChild(partsDiv);
-
-    // Auto-set pill placeholder
-    const pill = document.createElement('div');
-    pill.id = `pill-${b.id}`;
-    card.appendChild(pill);
-
-    grid.appendChild(card);
+  // Level selects
+  const row = document.createElement('div');
+  row.className = 'level-row';
+  ['current', 'target'].forEach(type => {
+    const grp = document.createElement('div');
+    grp.className = 'level-group';
+    const lbl = document.createElement('label');
+    lbl.textContent = type === 'current' ? 'Current' : 'Target';
+    grp.appendChild(lbl);
+    grp.appendChild(makeSelect(b.id, type));
+    row.appendChild(grp);
   });
+  card.appendChild(row);
+
+  // Parts display
+  const partsDiv = document.createElement('div');
+  partsDiv.className = 'card-parts';
+  partsDiv.innerHTML = `<span class="card-parts-label">Parts needed</span><span class="card-parts-value zero" id="parts-${b.id}">—</span>`;
+  card.appendChild(partsDiv);
+
+  // Auto-set pill placeholder
+  const pill = document.createElement('div');
+  pill.id = `pill-${b.id}`;
+  card.appendChild(pill);
+
+  return card;
 }
+
+function renderBuildings() {
+  const coreGrid = document.getElementById('buildingsGrid');
+  CORE_BUILDINGS.forEach(b => coreGrid.appendChild(buildCard(b)));
+
+  const utilGrid = document.getElementById('utilityGrid');
+  UTILITY_BUILDINGS.forEach(b => utilGrid.appendChild(buildCard(b)));
+}
+
+// ─── COLLAPSIBLE ──────────────────────────────────────────────────────────────
+
+document.getElementById('utilityToggle').addEventListener('click', () => {
+  const body  = document.getElementById('utilityBody');
+  const arrow = document.getElementById('utilityArrow');
+  const open  = body.classList.toggle('open');
+  arrow.classList.toggle('open', open);
+});
 
 // ─── RECALCULATE ──────────────────────────────────────────────────────────────
 
 function recalculate() {
-  // ── Step 1: compute effective targets fresh from userTarget ──────────────────
-  // Start from userTarget, then apply rules on top. Never mutate userTarget.
-  BUILDINGS.forEach(b => {
+  // Step 1: effective targets from userTarget, never below current
+  ALL_BUILDINGS.forEach(b => {
     state[b.id].target = f(Math.max(state[b.id].userTarget, state[b.id].current));
   });
 
-  // ── Step 2: WT cap — clamp all other effective targets to WT's whole level ──
-  const wtEffTarget = f(state.watchTower.target);
+  // Step 2: WT cap — clamp all CORE building targets to WT's whole level
+  // Utility buildings are independent and not capped
+  const wtEffTarget   = f(state.watchTower.target);
   const wtTargetWhole = Math.floor(wtEffTarget + 0.001);
 
-  BUILDINGS.forEach(b => {
+  CORE_BUILDINGS.forEach(b => {
     if (b.id === 'watchTower') return;
     if (f(state[b.id].target) > wtTargetWhole) {
       state[b.id].target = wtTargetWhole;
     }
   });
 
-  // ── Step 3: prereq enforcement ───────────────────────────────────────────────
-  // Track which buildings were auto-raised and why
+  // Step 3: prereq enforcement
   const autoReasons = {};
-  BUILDINGS.forEach(b => { autoReasons[b.id] = []; });
+  ALL_BUILDINGS.forEach(b => { autoReasons[b.id] = []; });
 
   const wtCurrentWhole = Math.floor(f(state.watchTower.current) + 0.001);
 
   for (let from = wtCurrentWhole; from < wtTargetWhole; from++) {
-    const to = from + 1;
-    const prereqLv = from; // guild & troop must be at `from` before WT reaches `to`
+    const to       = from + 1;
+    const prereqLv = from;
 
-    // Guild
     if (f(state.guild.target) < prereqLv) {
       state.guild.target = prereqLv;
       autoReasons.guild.push(`Must be level ${prereqLv} before Watch Tower can reach level ${to}.`);
     }
 
-    // Troop
     const troopId = WT_PREREQ_TROOP[to];
     if (troopId && f(state[troopId].target) < prereqLv) {
       state[troopId].target = prereqLv;
-      const troopName = BUILDINGS.find(x => x.id === troopId).name;
+      const troopName = CORE_BUILDINGS.find(x => x.id === troopId).name;
       autoReasons[troopId].push(`${troopName} must be level ${prereqLv} before Watch Tower can reach level ${to}.`);
     }
   }
 
-  // ── Step 4: update all target dropdowns to reflect effective targets ─────────
-  BUILDINGS.forEach(b => {
+  // Step 4: update all target dropdowns
+  ALL_BUILDINGS.forEach(b => {
     const tgtSel = document.getElementById(`target-${b.id}`);
     if (tgtSel) {
       tgtSel.value = f(state[b.id].target);
-      const isAuto = autoReasons[b.id].length > 0;
-      tgtSel.classList.toggle('auto-set', isAuto);
+      tgtSel.classList.toggle('auto-set', autoReasons[b.id].length > 0);
     }
   });
 
-  // ── Step 5: compute costs and update card UI ─────────────────────────────────
+  // Step 5: compute costs and update cards
   let grandTotal = 0;
-  const breakdownData = [];
+  const coreBreakdown    = [];
+  const utilityBreakdown = [];
 
-  BUILDINGS.forEach(b => {
-    const s = state[b.id];
-    const parts = calcCost(b.id, s.current, s.target);
-    grandTotal += parts;
+  ALL_BUILDINGS.forEach(b => {
+    const s      = state[b.id];
+    const parts  = calcCost(b.id, s.current, s.target);
+    grandTotal  += parts;
     const isAuto = autoReasons[b.id].length > 0;
-    breakdownData.push({ ...b, parts, isAuto });
+    const entry  = { ...b, parts, isAuto };
 
-    // Card glow
+    if (UTILITY_BUILDINGS.find(u => u.id === b.id)) {
+      utilityBreakdown.push(entry);
+    } else {
+      coreBreakdown.push(entry);
+    }
+
     document.getElementById(`card-${b.id}`).classList.toggle('has-override', isAuto);
 
-    // Parts value
     const partsEl = document.getElementById(`parts-${b.id}`);
     if (parts === 0) {
       partsEl.textContent = '—';
@@ -668,43 +877,56 @@ function recalculate() {
       partsEl.className = `card-parts-value${isAuto ? ' auto' : ''}`;
     }
 
-    // Pill (replaces old verbose notice)
     const pillEl = document.getElementById(`pill-${b.id}`);
-    pillEl.innerHTML = isAuto
-      ? `<span class="auto-pill">Prerequisite auto-set</span>`
-      : '';
+    if (pillEl) {
+      pillEl.innerHTML = isAuto ? `<span class="auto-pill">Prerequisite auto-set</span>` : '';
+    }
   });
 
-  // ── Step 6: summary breakdown ────────────────────────────────────────────────
+  // Step 6: summary breakdown
   const breakdownList = document.getElementById('breakdownList');
   breakdownList.innerHTML = '';
-  breakdownData.forEach(b => {
-    const s = state[b.id];
+
+  function addBreakdownRow(b) {
+    const s       = state[b.id];
     const lvRange = f(s.current) === f(s.target)
       ? `Lv ${f(s.current)}`
       : `Lv ${f(s.current)} → ${f(s.target)}`;
     const row = document.createElement('div');
     row.className = `breakdown-row${b.parts === 0 ? ' zero' : ''}${b.isAuto ? ' is-auto' : ''}`;
     row.style.setProperty('--bcolor', COLOR_MAP[b.cls] || '#4a6aff');
+    const estMark = b.estimated ? '<span style="color:var(--accent);margin-left:2px;">*</span>' : '';
     row.innerHTML = `
-      <span class="breakdown-name">${b.icon} ${b.name} <span class="breakdown-lv">${lvRange}</span></span>
+      <span class="breakdown-name">${b.icon} ${b.name}${estMark} <span class="breakdown-lv">${lvRange}</span></span>
       ${b.isAuto ? '<span class="breakdown-tag">Auto-set</span>' : '<span></span>'}
       <span class="breakdown-val">${b.parts === 0 ? '—' : b.parts.toLocaleString()}</span>`;
     breakdownList.appendChild(row);
-  });
+  }
+
+  coreBreakdown.forEach(addBreakdownRow);
+
+  // Divider before utility
+  const hasUtilityParts = utilityBreakdown.some(b => b.parts > 0);
+  if (hasUtilityParts) {
+    const divider = document.createElement('div');
+    divider.className = 'breakdown-divider';
+    divider.textContent = 'Utility Buildings';
+    breakdownList.appendChild(divider);
+    utilityBreakdown.forEach(addBreakdownRow);
+  }
 
   document.getElementById('grandTotal').textContent = grandTotal.toLocaleString();
 
-  // ── Step 7: overrides summary ────────────────────────────────────────────────
+  // Step 7: overrides summary
   const ob = document.getElementById('overridesBlock');
   ob.innerHTML = '';
-  const autoBuildings = breakdownData.filter(b => b.isAuto);
+  const autoBuildings = [...coreBreakdown, ...utilityBreakdown].filter(b => b.isAuto);
   if (autoBuildings.length) {
     const block = document.createElement('div');
     block.className = 'overrides-block';
     block.innerHTML = `<div class="overrides-block-title">⚠ Prerequisite Auto-Adjustments</div>`;
     autoBuildings.forEach(b => {
-      const s = state[b.id];
+      const s    = state[b.id];
       const item = document.createElement('div');
       item.className = 'ov-item';
       item.innerHTML =
@@ -719,7 +941,7 @@ function recalculate() {
 // ─── RESET ────────────────────────────────────────────────────────────────────
 
 document.getElementById('resetBtn').addEventListener('click', () => {
-  BUILDINGS.forEach(b => {
+  ALL_BUILDINGS.forEach(b => {
     state[b.id] = { current: 0, userTarget: 0, target: 0 };
     const curSel = document.getElementById(`current-${b.id}`);
     const tgtSel = document.getElementById(`target-${b.id}`);
